@@ -1,0 +1,146 @@
+:root {
+  --primary-color: #4285f4;
+  --secondary-color: #34a853;
+  --dark-color: #202124;
+  --light-color: #f8f9fa;
+  --danger-color: #ea4335;
+  --warning-color: #fbbc05;
+  --success-color: #34a853;
+  --gray-color: #5f6368;
+  --border-color: #dadce0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--light-color);
+  color: var(--dark-color);
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: #3367d6;
+  border-color: #3367d6;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+  background-color: #2d9247;
+  border-color: #2d9247;
+}
+
+/* Card Styling */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+/* Animation */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Editor specific styles */
+.ql-editor {
+  min-height: 300px;
+  font-size: 16px;
+}
+
+.editor-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.ai-panel {
+  border-left: 1px solid var(--border-color);
+  padding: 15px;
+}
+
+.collaborator-badge {
+  margin-right: 5px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background-color: #e0e0e0;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.collaborator-badge img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+/* Dashboard styling */
+.document-card {
+  cursor: pointer;
+  height: 100%;
+}
+
+.document-card .card-footer {
+  background: transparent;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ai-panel {
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    margin-top: 20px;
+  }
+}
