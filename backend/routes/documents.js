@@ -22,7 +22,7 @@ const auth = async (req, res, next) => {
 };
 
 // Get all documents for a user
-router.get('/', auth, async (req, res) => {
+router.get('/documents', auth, async (req, res) => {
   try {
     const documents = await Document.find({
       $or: [
@@ -39,7 +39,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Create a new document
-router.post('/', auth, async (req, res) => {
+router.post('/documents', auth, async (req, res) => {
   try {
     const { title } = req.body;
     
@@ -59,7 +59,7 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Get a specific document
-router.get('/:id', auth, async (req, res) => {
+router.get('/documents/:id', auth, async (req, res) => {
   try {
     const document = await Document.findById(req.params.id);
     
@@ -84,7 +84,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // Update a document
-router.put('/:id', auth, async (req, res) => {
+router.put('/documents/:id', auth, async (req, res) => {
   try {
     const { title, content } = req.body;
     
@@ -124,7 +124,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // Delete a document
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/documents/:id', auth, async (req, res) => {
   try {
     const document = await Document.findById(req.params.id);
     
@@ -150,7 +150,7 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // Add collaborator to document
-router.post('/:id/collaborators', auth, async (req, res) => {
+router.post('/documents/:id/collaborators', auth, async (req, res) => {
   try {
     const { email } = req.body;
     
@@ -189,7 +189,7 @@ router.post('/:id/collaborators', auth, async (req, res) => {
 });
 
 // Remove collaborator from document
-router.delete('/:id/collaborators/:userId', auth, async (req, res) => {
+router.delete('/documents/:id/collaborators/:userId', auth, async (req, res) => {
   try {
     const document = await Document.findById(req.params.id);
     

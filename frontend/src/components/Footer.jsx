@@ -8,7 +8,7 @@ const Footer = () => {
       <Container>
         <Row className="align-items-center">
           <Col md={6} className="text-center text-md-start">
-            <h5 className="mb-0">DocCollab</h5>
+            <h5 className="mb-0">Docolab</h5>
             <p className="text-muted small mb-0">Collaborative Document Editing with AI</p>
           </Col>
           <Col md={6} className="text-center text-md-end mt-3 mt-md-0">

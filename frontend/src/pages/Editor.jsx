@@ -240,8 +240,7 @@ function Editor() {
               disabled={saving}
               title="Save document"
             >
-              {saving ? <Spinner animation="border" size="sm" /> : <i className="bi bi-save me-1"></i>}
-              {saving ? 'Saving...' : 'Save'}
+              Save
             </Button>
             
             <Dropdown>

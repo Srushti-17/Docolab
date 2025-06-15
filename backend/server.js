@@ -41,8 +41,8 @@ mongoose.connect(process.env.MONGO_URI)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/documents', documentRoutes);
+app.use('/api', authRoutes);
+app.use('/api', documentRoutes);
 
 // AI Endpoints using LangChain
 app.post('/api/ai/summarize', async (req, res) => {

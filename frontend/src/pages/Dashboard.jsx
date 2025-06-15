@@ -19,15 +19,18 @@ function Dashboard() {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get('/api/documents', {
+      console.log('Fetching documents with token:', token);
+      const response = await axios.get('http://localhost:5000/api/documents', {
         headers: { Authorization: `Bearer ${token}` }
       });
   
       // Ensure response.data is always an array
       if (Array.isArray(response.data)) {
         setDocuments(response.data);
+        console.log('Documents fetched successfully:', response.data);
       } else {
         setDocuments([]);  // Set an empty array if response is unexpected
+        console.warn('Unexpected response format:', response.data);
       }
   
       setError(null);
@@ -43,7 +46,7 @@ function Dashboard() {
   const handleCreateDocument = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('/api/documents', 
+      const response = await axios.post('http://localhost:5000/api/documents', 
         { title: 'Untitled Document', content: '' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -204,4 +207,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Dashboard; 

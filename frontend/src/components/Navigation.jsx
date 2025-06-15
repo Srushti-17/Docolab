@@ -34,52 +34,109 @@ const Navigation = () => {
   };
 
   return (
-    <Navbar bg="white" expand="lg" className="shadow-sm">
+    <Navbar expand="lg" className="shadow-sm" style={{ backgroundColor: '#F5F5F5' }}>
       <Container>
         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-          <img 
+          {/*<img 
             src={img} 
             alt="Docolab" 
             height="30" 
             className="me-2 size-[50px]" 
-          />
-          <span className="fw-bold text-primary">Docolab</span>
+          />*/}
+          <span className="text-[30px] font-bold" style={{ color: '#1E3A8A' }}>Docolab</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/" 
+              style={{ color: '#1E3A8A', fontWeight: '500' }}
+              className="hover:text-[#3B82F6] transition-colors"
+            >
+              Home
+            </Nav.Link>
             {isLoggedIn && (
-              <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
+              <Nav.Link 
+                as={Link} 
+                to="/dashboard"
+                style={{ color: '#1E3A8A', fontWeight: '500' }}
+                className="hover:text-[#3B82F6] transition-colors"
+              >
+                Dashboard
+              </Nav.Link>
             )}
           </Nav>
           <Nav>
             {isLoggedIn ? (
               <>
                 <Button 
-                  variant="success" 
-                  className="me-3 d-flex align-items-center" 
+                  className="me-3 d-flex align-items-center border-0 font-semibold shadow-sm" 
                   onClick={createNewDocument}
+                  style={{ 
+                    backgroundColor: '#3B82F6', 
+                    color: 'white',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = '#1E3A8A';
+                    e.target.style.transform = 'translateY(-1px)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = '#3B82F6';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12)';
+                  }}
                 >
                   <FaPlus className="me-1" /> New Document
                 </Button>
                 <Dropdown align="end">
-                  <Dropdown.Toggle variant="light" id="dropdown-basic" className="d-flex align-items-center">
-                    <div className="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-1" style={{ width: '30px', height: '30px' }}>
+                  <Dropdown.Toggle 
+                    className="d-flex align-items-center border-0 shadow-sm" 
+                    style={{ 
+                      backgroundColor: 'white', 
+                      color: '#1E3A8A',
+                      fontWeight: '500',
+                      border: '1px solid #E5E7EB'
+                    }}
+                  >
+                    <div 
+                      className="text-white rounded-circle d-flex justify-content-center align-items-center me-2" 
+                      style={{ 
+                        width: '30px', 
+                        height: '30px',
+                        backgroundColor: '#3B82F6'
+                      }}
+                    >
                       {username.charAt(0).toUpperCase()}
                     </div>
                     <span>{username}</span>
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/profile">
+                  <Dropdown.Menu style={{ backgroundColor: 'white', border: '1px solid #E5E7EB', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }}>
+                    <Dropdown.Item 
+                      as={Link} 
+                      to="/profile"
+                      style={{ color: '#1E3A8A' }}
+                      className="hover:bg-[#F5F5F5] transition-colors"
+                    >
                       <FaUser className="me-2" /> Profile
                     </Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/dashboard">
+                    <Dropdown.Item 
+                      as={Link} 
+                      to="/dashboard"
+                      style={{ color: '#1E3A8A' }}
+                      className="hover:bg-[#F5F5F5] transition-colors"
+                    >
                       <FaCog className="me-2" /> My Documents
                     </Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={handleLogout}>
+                    <Dropdown.Divider style={{ borderColor: '#E5E7EB' }} />
+                    <Dropdown.Item 
+                      onClick={handleLogout}
+                      style={{ color: '#1E3A8A' }}
+                      className="hover:bg-[#F5F5F5] transition-colors"
+                    >
                       <FaSignOutAlt className="me-2" /> Logout
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -87,8 +144,53 @@ const Navigation = () => {
               </>
             ) : (
               <>
-                <Button as={Link} to="/login" variant="outline-primary" className="me-2">Login</Button>
-                <Button as={Link} to="/register" variant="primary">Sign Up</Button>
+                <Button 
+                  as={Link} 
+                  to="/login" 
+                  className="me-2 border-2 font-medium shadow-sm"
+                  style={{ 
+                    borderColor: '#1E3A8A', 
+                    color: '#1E3A8A',
+                    backgroundColor: 'white',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = '#1E3A8A';
+                    e.target.style.color = 'white';
+                    e.target.style.transform = 'translateY(-1px)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(30, 58, 138, 0.3)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = 'white';
+                    e.target.style.color = '#1E3A8A';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12)';
+                  }}
+                >
+                  Login
+                </Button>
+                <Button 
+                  as={Link} 
+                  to="/register" 
+                  className="font-medium border-0 shadow-sm"
+                  style={{ 
+                    backgroundColor: '#3B82F6', 
+                    color: 'white',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = '#1E3A8A';
+                    e.target.style.transform = 'translateY(-1px)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = '#3B82F6';
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12)';
+                  }}
+                >
+                  Sign Up
+                </Button>
               </>
             )}
           </Nav>
