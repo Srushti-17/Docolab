@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Button, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaSignOutAlt, FaCog, FaPlus } from 'react-icons/fa';
+import axios from 'axios';
 import img from "../assets/logo.png";
 import img1 from "../assets/logo1.png";
 
@@ -29,8 +30,19 @@ const Navigation = () => {
     navigate('/');
   };
 
-  const createNewDocument = () => {
-    navigate('/editor');
+  const API_BASE_URL = "http://localhost:5000"; // Update this with your backend URL
+
+  const createNewDocument = async() => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API_BASE_URL}/api/documents`, 
+        { title: 'Untitled Document', content: '' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      navigate(`/editor/${response.data._id}`);
+    } catch (err) {
+      console.error('Error creating document:', err);
+    }
   };
 
   return (

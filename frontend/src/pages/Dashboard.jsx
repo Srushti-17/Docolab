@@ -48,7 +48,7 @@ function Dashboard() {
   const handleCreateDocument = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/documents', 
+      const response = await axios.post(`${API_BASE_URL}/api/documents`, 
         { title: 'Untitled Document', content: '' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -64,7 +64,7 @@ function Dashboard() {
     if (window.confirm('Are you sure you want to delete this document?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`/api/documents/${id}`, {
+        await axios.delete(`${API_BASE_URL}/api/documents/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setDocuments(documents.filter(doc => doc._id !== id));
