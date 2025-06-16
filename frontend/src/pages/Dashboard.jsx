@@ -15,12 +15,14 @@ function Dashboard() {
     fetchDocuments();
   }, []);
 
+  const API_BASE_URL = "http://localhost:5000"; // Update this with your backend URL
+
   const fetchDocuments = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
       console.log('Fetching documents with token:', token);
-      const response = await axios.get('http://localhost:5000/api/documents', {
+      const response = await axios.get(`${API_BASE_URL}/api/documents`, {
         headers: { Authorization: `Bearer ${token}` }
       });
   

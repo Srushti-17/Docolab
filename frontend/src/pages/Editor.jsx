@@ -43,14 +43,17 @@ function Editor() {
     };
   }, [id]);
 
+  const API_BASE_URL = "http://localhost:5000"; // Update this with your backend URL
+
   const fetchDocument = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get(`/api/documents/${id}`, {
+      const response = await axios.get(`${API_BASE_URL}/api/documents/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setDocument(response.data);
+      console.log(response.data)
       setError(null);
     } catch (err) {
       setError('Failed to load document. Please try again.');
@@ -60,8 +63,7 @@ function Editor() {
     }
   };
 
-  const API_BASE_URL = "http://localhost:5000"; // Update this with your backend URL
-
+  
   const saveDocument = async () => {
     try {
         setSaving(true);
