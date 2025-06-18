@@ -44,8 +44,73 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 app.use('/api', authRoutes);
 app.use('/api', documentRoutes);
 
+// Add this endpoint to your server.js file after your existing AI endpoints
+
+app.post('/api/ai/process', async (req, res) => {
+  try {
+    const { text, action } = req.body;
+    
+    const model = new ChatGoogleGenerativeAI({
+      apiKey: process.GEMINI_API_KEY,
+      modelName: "gemini-pro"
+    });
+    
+    let promptTemplate;
+    let inputVariables;
+    let chainInput;
+    
+    switch (action) {
+      case 'summarize':
+        promptTemplate = new PromptTemplate({
+          template: "Summarize the following text in a concise way while retaining all key information: {text}",
+          inputVariables: ["text"],
+        });
+        chainInput = { text };
+        break;
+        
+      case 'improve':
+      case 'improve-full':
+        promptTemplate = new PromptTemplate({
+          template: "Improve the following text by enhancing clarity, fixing grammar, improving word choice, and making it more engaging: {text}",
+          inputVariables: ["text"],
+        });
+        chainInput = { text };
+        break;
+        
+      case 'define':
+        promptTemplate = new PromptTemplate({
+          template: "Provide a dictionary-style definition for the word or phrase: {text}. Include: 1) part of speech, 2) pronunciation if relevant, 3) definition(s), 4) example usage in a sentence, 5) synonyms if applicable.",
+          inputVariables: ["text"],
+        });
+        chainInput = { text };
+        break;
+        
+      case 'translate':
+        // For translate, you might want to add a targetLanguage parameter
+        // For now, defaulting to Spanish as an example
+        promptTemplate = new PromptTemplate({
+          template: "Translate the following text into Spanish: {text}",
+          inputVariables: ["text"],
+        });
+        chainInput = { text };
+        break;
+        
+      default:
+        return res.status(400).json({ message: 'Invalid action specified' });
+    }
+    
+    const chain = new LLMChain({ llm: model, prompt: promptTemplate });
+    const result = await chain.call(chainInput);
+    
+    res.json({ result: result.text });
+  } catch (error) {
+    console.error('AI processing error:', error);
+    res.status(500).json({ message: 'Failed to process AI request' });
+  }
+});
+
 // AI Endpoints using LangChain
-app.post('/api/ai/summarize', async (req, res) => {
+{/*app.post('/api/ai/summarize', async (req, res) => {
   try {
     const { text } = req.body;
     
@@ -139,7 +204,7 @@ app.post('/api/ai/translate', async (req, res) => {
     console.error('Translation error:', error);
     res.status(500).json({ message: 'Failed to translate text' });
   }
-});
+});*/}
 
 // Socket.io logic for real-time collaboration
 io.on('connection', (socket) => {

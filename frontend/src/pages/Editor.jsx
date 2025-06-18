@@ -92,7 +92,7 @@ function Editor() {
     } finally {
         setSaving(false);
     }
-};
+  };
 
 
   const handleContentChange = (e) => {
@@ -138,7 +138,7 @@ function Editor() {
       const token = localStorage.getItem('token');
       const textToProcess = action === 'improve-full' ? document.content : selectedText;
       
-      const response = await axios.post('/api/ai/process', {
+      const response = await axios.post(`${API_BASE_URL}/api/ai/process`, {
         text: textToProcess,
         action: action
       }, {
@@ -182,7 +182,7 @@ function Editor() {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`/api/documents/${document._id}/share`, {
+      await axios.post(`${API_BASE_URL}/api/documents/${document._id}/share`, {
         email: shareEmail
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -342,7 +342,7 @@ function Editor() {
       >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
-            <i className="bi bi-robot text-primary me-2"></i>
+            <i className="text-primary me-2"></i>
             AI Assistant
           </Offcanvas.Title>
         </Offcanvas.Header>
