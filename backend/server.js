@@ -50,9 +50,10 @@ app.post('/api/ai/process', async (req, res) => {
   try {
     const { text, action } = req.body;
     
+    // Fix: Use process.env.GEMINI_API_KEY and explicitly pass it
     const model = new ChatGoogleGenerativeAI({
-      apiKey: process.GEMINI_API_KEY,
-      modelName: "gemini-pro"
+      apiKey: process.env.GEMINI_API_KEY,
+      modelName: "gemini-1.5-flash"
     });
     
     let promptTemplate;
@@ -89,10 +90,10 @@ app.post('/api/ai/process', async (req, res) => {
         // For translate, you might want to add a targetLanguage parameter
         // For now, defaulting to Spanish as an example
         promptTemplate = new PromptTemplate({
-          template: "Translate the following text into Spanish: {text}",
-          inputVariables: ["text"],
+          template: "Translate the following text into {targetLanguage}: {text}",
+          inputVariables: ["text", "targetLanguage"],
         });
-        chainInput = { text };
+        chainInput = { text, targetLanguage: req.body.targetLanguage || 'Hindi' };
         break;
         
       default:
@@ -108,103 +109,6 @@ app.post('/api/ai/process', async (req, res) => {
     res.status(500).json({ message: 'Failed to process AI request' });
   }
 });
-
-// AI Endpoints using LangChain
-{/*app.post('/api/ai/summarize', async (req, res) => {
-  try {
-    const { text } = req.body;
-    
-    const model = new ChatGoogleGenerativeAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      modelName: "gemini-pro"
-    });
-    
-    const promptTemplate = new PromptTemplate({
-      template: "Summarize the following text in a concise way while retaining all key information: {text}",
-      inputVariables: ["text"],
-    });
-    
-    const chain = new LLMChain({ llm: model, prompt: promptTemplate });
-    const result = await chain.call({ text });
-    
-    res.json({ summary: result.text });
-  } catch (error) {
-    console.error('Summarization error:', error);
-    res.status(500).json({ message: 'Failed to summarize text' });
-  }
-});
-
-app.post('/api/ai/improve', async (req, res) => {
-  try {
-    const { text } = req.body;
-    
-    const model = new ChatGoogleGenerativeAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      modelName: "gemini-pro"
-    });
-    
-    const promptTemplate = new PromptTemplate({
-      template: "Improve the following text by enhancing clarity, fixing grammar, improving word choice, and making it more engaging: {text}",
-      inputVariables: ["text"],
-    });
-    
-    const chain = new LLMChain({ llm: model, prompt: promptTemplate });
-    const result = await chain.call({ text });
-    
-    res.json({ improved: result.text });
-  } catch (error) {
-    console.error('Improvement error:', error);
-    res.status(500).json({ message: 'Failed to improve text' });
-  }
-});
-
-app.post('/api/ai/define', async (req, res) => {
-  try {
-    const { word } = req.body;
-    
-    const model = new ChatGoogleGenerativeAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      modelName: "gemini-pro"
-    });
-    
-    const promptTemplate = new PromptTemplate({
-      template: "Provide a dictionary-style definition for the word: {word}. Include: 1) part of speech, 2) pronunciation if relevant, 3) definition(s), 4) example usage in a sentence, 5) synonyms if applicable.",
-      inputVariables: ["word"],
-    });
-    
-    const chain = new LLMChain({ llm: model, prompt: promptTemplate });
-    const result = await chain.call({ word });
-    
-    res.json({ definition: result.text });
-  } catch (error) {
-    console.error('Definition error:', error);
-    res.status(500).json({ message: 'Failed to get definition' });
-  }
-});
-
-app.post('/api/ai/translate', async (req, res) => {
-  try {
-    const { text, targetLanguage } = req.body;
-    
-    const model = new ChatGoogleGenerativeAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      modelName: "gemini-pro"
-    });
-    
-    const promptTemplate = new PromptTemplate({
-      template: "Translate the following text into {targetLanguage}: {text}",
-      inputVariables: ["text", "targetLanguage"],
-    });
-    
-    const chain = new LLMChain({ llm: model, prompt: promptTemplate });
-    const result = await chain.call({ text, targetLanguage });
-    
-    res.json({ translation: result.text });
-  } catch (error) {
-    console.error('Translation error:', error);
-    res.status(500).json({ message: 'Failed to translate text' });
-  }
-});*/}
 
 // Socket.io logic for real-time collaboration
 io.on('connection', (socket) => {

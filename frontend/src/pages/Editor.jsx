@@ -25,6 +25,7 @@ function Editor() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareEmail, setShareEmail] = useState('');
   const [autoSave, setAutoSave] = useState(true);
+  const [targetLanguage, setTargetLanguage] = useState('Hindi');
   
   const editorRef = useRef(null);
   const saveTimerRef = useRef(null);
@@ -140,7 +141,8 @@ function Editor() {
       
       const response = await axios.post(`${API_BASE_URL}/api/ai/process`, {
         text: textToProcess,
-        action: action
+        action: action,
+        targetLanguage: action === 'translate' ? targetLanguage : undefined
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -179,10 +181,12 @@ function Editor() {
 
   const handleShareDocument = async () => {
     if (!shareEmail) return;
+
+    console.log('Document ID:', document._id); // Add this line
     
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${API_BASE_URL}/api/documents/${document._id}/share`, {
+      await axios.post(`${API_BASE_URL}/api/documents/${document._id}/collaborators`, {
         email: shareEmail
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -399,13 +403,18 @@ function Editor() {
             <Tab eventKey="translate" title="Translate">
               <p>Translate your selected text to another language.</p>
               <Form.Group className="mb-3">
-                <Form.Select className="mb-2">
-                  <option>English</option>
-                  <option>Spanish</option>
-                  <option>French</option>
-                  <option>German</option>
-                  <option>Chinese</option>
-                  <option>Japanese</option>
+                <Form.Select 
+                  className="mb-2" 
+                  value={targetLanguage}
+                  onChange={(e) => setTargetLanguage(e.target.value)}
+                >
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Spanish">Spanish</option>
+                  <option value="French">French</option>
+                  <option value="German">German</option>
+                  <option value="Chinese">Chinese</option>
+                  <option value="Japanese">Japanese</option>
                 </Form.Select>
               </Form.Group>
               <Button 
