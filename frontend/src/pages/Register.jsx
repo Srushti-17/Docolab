@@ -33,8 +33,10 @@ const Register = () => {
       return;
     }
 
+     const API_BASE_URL = "http://localhost:5000";
+
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         username: formData.username,
         email: formData.email,
         password: formData.password
@@ -48,6 +50,7 @@ const Register = () => {
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      console.error('Registration error:', err);
     } finally {
       setLoading(false);
     }

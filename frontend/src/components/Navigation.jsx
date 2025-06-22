@@ -129,14 +129,6 @@ const Navigation = () => {
                   <Dropdown.Menu style={{ backgroundColor: 'white', border: '1px solid #E5E7EB', boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)' }}>
                     <Dropdown.Item 
                       as={Link} 
-                      to="/profile"
-                      style={{ color: '#1E3A8A' }}
-                      className="hover:bg-[#F5F5F5] transition-colors"
-                    >
-                      <FaUser className="me-2" /> Profile
-                    </Dropdown.Item>
-                    <Dropdown.Item 
-                      as={Link} 
                       to="/dashboard"
                       style={{ color: '#1E3A8A' }}
                       className="hover:bg-[#F5F5F5] transition-colors"

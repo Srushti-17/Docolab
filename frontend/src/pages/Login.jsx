@@ -24,8 +24,10 @@ const Login = () => {
     setLoading(true);
     setError('');
 
+     const API_BASE_URL = "http://localhost:5000";
+
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, formData);
       
       // Store token and user info in localStorage
       localStorage.setItem('token', response.data.token);

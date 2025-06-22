@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 // Register new user
-router.post('/register', async (req, res) => {
+router.post('/auth/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
@@ -52,7 +52,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login user
-router.post('/login', async (req, res) => {
+router.post('/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
