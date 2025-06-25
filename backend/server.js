@@ -87,8 +87,7 @@ app.post('/api/ai/process', async (req, res) => {
         break;
         
       case 'translate':
-        // For translate, you might want to add a targetLanguage parameter
-        // For now, defaulting to Spanish as an example
+        
         promptTemplate = new PromptTemplate({
           template: "Translate the following text into {targetLanguage}: {text}",
           inputVariables: ["text", "targetLanguage"],
