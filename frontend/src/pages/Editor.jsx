@@ -44,7 +44,7 @@ function Editor() {
     };
   }, [id]);
 
-  const API_BASE_URL = "http://localhost:5000"; // Update this with your backend URL
+  const API_BASE_URL = "http://localhost:5000"; 
 
   const fetchDocument = async () => {
     try {
@@ -182,7 +182,7 @@ function Editor() {
   const handleShareDocument = async () => {
     if (!shareEmail) return;
 
-    console.log('Document ID:', document._id); // Add this line
+    console.log('Document ID:', document._id); 
     
     try {
       const token = localStorage.getItem('token');
