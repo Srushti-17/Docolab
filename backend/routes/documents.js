@@ -238,7 +238,6 @@ router.post('/documents/:id/share', auth, async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to share this document' });
     }
     
-    // Find the user to share with
     const userToShareWith = await User.findOne({ email });
     
     if (!userToShareWith) {
