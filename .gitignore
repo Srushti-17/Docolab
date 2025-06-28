@@ -5,8 +5,8 @@ backend/node_modules/
 backend/.env
 
 # Logs
-frontend/logs
-frontend/*.log
+logs
+*.log
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
