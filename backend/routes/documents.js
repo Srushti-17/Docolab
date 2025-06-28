@@ -188,6 +188,36 @@ router.post('/documents/:id/collaborators', auth, async (req, res) => {
   }
 });
 
+// Get collaborators for a document
+router.get('/documents/:id/collaborators', auth, async (req, res) => {
+  try {
+    const document = await Document.findById(req.params.id)
+      .populate('collaborators', 'email name') // Populate collaborator details
+      .populate('owner', 'email name');
+    
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    
+    // Check if user has access to this document
+    if (document.owner._id.toString() !== req.user.id && 
+        !document.collaborators.some(collab => collab._id.toString() === req.user.id)) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
+    res.json({
+      owner: document.owner,
+      collaborators: document.collaborators
+    });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    res.status(500).send('Server error');
+  }
+});
+
 // Remove collaborator from document
 router.delete('/documents/:id/collaborators/:userId', auth, async (req, res) => {
   try {
@@ -254,6 +284,41 @@ router.post('/documents/:id/share', auth, async (req, res) => {
     
   } catch (error) {
     console.error('Error sharing document:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get shared users for a document
+router.get('/documents/:id/share', auth, async (req, res) => {
+  try {
+    const documentId = req.params.id;
+    const userId = req.user.id;
+    
+    // Find the document and populate shared users
+    const document = await Document.findById(documentId)
+      .populate('owner', 'email name')
+      .populate('sharedWith', 'email name');
+    
+    if (!document) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    
+    // Check if user has access to this document
+    if (document.owner._id.toString() !== userId && 
+        !document.sharedWith.some(user => user._id.toString() === userId)) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
+    res.json({
+      owner: document.owner,
+      sharedWith: document.sharedWith
+    });
+    
+  } catch (error) {
+    console.error('Error getting shared users:', error);
+    if (error.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Document not found' });
+    }
     res.status(500).json({ message: 'Server error' });
   }
 });

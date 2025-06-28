@@ -19,7 +19,7 @@ const DocumentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
-  sharedWith: [{  // Add this if you want separate sharing
+  sharedWith: [{  // Add this if you want separate sharing 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],

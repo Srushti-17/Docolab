@@ -186,7 +186,14 @@ function Editor() {
     
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${API_BASE_URL}/api/documents/${document._id}/collaborators`, {
+      console.log('Token exists:', !!token); // Debug line
+      
+      if (!token) {
+        alert('Please log in again');
+        return;
+      }
+      console.log('Sharing document with email:', shareEmail);
+      await axios.post(`${API_BASE_URL}/api/documents/${document._id}/share`, {
         email: shareEmail
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -197,7 +204,16 @@ function Editor() {
       alert('Document shared successfully');
     } catch (err) {
       console.error('Error sharing document:', err);
-      alert('Failed to share document. Please try again.');
+      console.error('Error response:', err.response?.data);
+      
+      // Better error handling
+      if (err.response?.status === 404) {
+        alert('User not found with that email address');
+      } else if (err.response?.status === 403) {
+        alert('You do not have permission to share this document');
+      } else {
+        alert('Failed to share document. Please try again.');
+      }
     }
   };
 
