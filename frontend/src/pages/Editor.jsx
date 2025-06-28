@@ -193,7 +193,7 @@ function Editor() {
         return;
       }
       console.log('Sharing document with email:', shareEmail);
-      await axios.post(`${API_BASE_URL}/api/documents/${document._id}/share`, {
+      await axios.post(`${API_BASE_URL}/api/documents/${document._id}/collaborators`, {
         email: shareEmail
       }, {
         headers: { Authorization: `Bearer ${token}` }
