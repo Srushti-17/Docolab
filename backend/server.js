@@ -24,18 +24,19 @@ const io = socketIo(server, {
   cors: {
     origin: process.env.FRONTEND_URL, // Your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   }
 });
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use((req, res, next) => {
+{/*app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
-});
+});*/}
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
