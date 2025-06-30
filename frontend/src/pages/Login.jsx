@@ -19,15 +19,26 @@ const Login = () => {
     });
   };
 
+  // Update your handleSubmit function in Login.jsx:
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    // Remove any trailing slashes and ensure proper URL construction
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '');
+    const loginUrl = `${API_BASE_URL}/api/auth/login`;
+    
+    console.log('Attempting login to:', loginUrl); // Debug log
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, formData);
+      const response = await axios.post(loginUrl, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true, // Important for CORS with credentials
+      });
       
       // Store token and user info in localStorage
       localStorage.setItem('token', response.data.token);
@@ -36,6 +47,7 @@ const Login = () => {
       // Redirect to dashboard
       navigate('/dashboard');
     } catch (err) {
+      console.error('Login error:', err); // Debug log
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
