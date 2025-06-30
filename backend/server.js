@@ -31,35 +31,17 @@ const io = socketIo(server, {
 
 // Middleware
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
-      process.env.FRONTEND_URL,
-      'https://docolab-cvu8f.vercel.app', // Your frontend domain
-      'http://localhost:3000', // For local development
-      'http://localhost:5173'  // For Vite dev server
-    ];
-    
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    
-    const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-    return callback(new Error(msg), false);
-  },
+  origin: [
+    'https://docolab-cvu8f.vercel.app', // Your frontend domain - EXACT match required
+    'http://localhost:3000', // For local development
+    'http://localhost:5173'  // For Vite dev server
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true,
-  optionsSuccessStatus: 200 // For legacy browser support
+  optionsSuccessStatus: 200
 }));
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-  console.log('Origin:', req.headers.origin);
-  console.log('User-Agent:', req.headers['user-agent']);
-  next();
-});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
