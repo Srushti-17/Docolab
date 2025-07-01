@@ -30,18 +30,7 @@ const io = socketIo(server, {
 });
 
 // Middleware
-app.use(cors({
-  origin: [
-    'https://docolab-cvu8f.vercel.app', // Your frontend domain - EXACT match required
-    'http://localhost:3000', // For local development
-    'http://localhost:5173'  // For Vite dev server
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
