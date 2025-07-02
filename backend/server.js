@@ -147,7 +147,19 @@ app.use((req, res, next) => {
     timestamp: new Date().toISOString()
   });
 });
+
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Document Collaboration API is running!',
+    status: 'success',
+    timestamp: new Date().toISOString(),
+    routes: {
+      auth: '/api/auth/login, /api/auth/register',
+      documents: '/api/documents',
+      ai: '/api/ai/process'
+    }
+  });
+});
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-// Add this at the very end of server.js
 module.exports = app;
