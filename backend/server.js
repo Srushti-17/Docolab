@@ -22,22 +22,61 @@ const server = http.createServer(app);
 // Configure socket.io with CORS
 const io = socketIo(server, {
   cors: {
-    origin: process.env.FRONTEND_URL, // Your frontend URL
+    origin: process.env.FRONTEND_URL || "*", // Allow all origins in development
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   }
 });
 
-// Middleware
-app.use(cors());
+// Middleware - CORS must come before routes
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "*",
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Root route - Move this BEFORE the 404 handler
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Document Collaboration API is running!',
+    status: 'success',
+    timestamp: new Date().toISOString(),
+    routes: {
+      auth: '/api/auth/login, /api/auth/register',
+      documents: '/api/documents',
+      ai: '/api/ai/process'
+    }
+  });
+});
+
+// Connect to MongoDB with error handling
+const connectDB = async () => {
+  try {
+    if (!process.env.MONGO_URI) {
+      throw new Error('MONGO_URI is not defined in environment variables');
+    }
+    
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('MongoDB connected successfully');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    // Don't exit process on Vercel, just log the error
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
+  }
+};
+
+// Initialize database connection
+connectDB();
 
 // Initialize Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -46,11 +85,14 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 app.use('/api', authRoutes);
 app.use('/api', documentRoutes);
 
-// Add this endpoint to your server.js file after your existing AI endpoints
-
+// AI processing endpoint
 app.post('/api/ai/process', async (req, res) => {
   try {
     const { text, action } = req.body;
+    
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ message: 'AI service not configured' });
+    }
     
     // Fix: Use process.env.GEMINI_API_KEY and explicitly pass it
     const model = new ChatGoogleGenerativeAI({
@@ -59,7 +101,6 @@ app.post('/api/ai/process', async (req, res) => {
     });
     
     let promptTemplate;
-    let inputVariables;
     let chainInput;
     
     switch (action) {
@@ -89,7 +130,6 @@ app.post('/api/ai/process', async (req, res) => {
         break;
         
       case 'translate':
-        
         promptTemplate = new PromptTemplate({
           template: "Translate the following text into {targetLanguage}: {text}",
           inputVariables: ["text", "targetLanguage"],
@@ -107,7 +147,7 @@ app.post('/api/ai/process', async (req, res) => {
     res.json({ result: result.text });
   } catch (error) {
     console.error('AI processing error:', error);
-    res.status(500).json({ message: 'Failed to process AI request' });
+    res.status(500).json({ message: 'Failed to process AI request', error: error.message });
   }
 });
 
@@ -137,9 +177,17 @@ io.on('connection', (socket) => {
   });
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.use((req, res, next) => {
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
+});
+
+// 404 handler - This should be LAST
+app.use((req, res) => {
   res.status(404).json({ 
     message: 'Route not found',
     method: req.method,
@@ -148,18 +196,22 @@ app.use((req, res, next) => {
   });
 });
 
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Document Collaboration API is running!',
-    status: 'success',
-    timestamp: new Date().toISOString(),
-    routes: {
-      auth: '/api/auth/login, /api/auth/register',
-      documents: '/api/documents',
-      ai: '/api/ai/process'
-    }
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('Server error:', error);
+  res.status(500).json({
+    message: 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
   });
 });
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+// Start server
+const PORT = process.env.PORT || 5000;
+
+// For Vercel, don't start the server if we're in a serverless environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+// Export the app for Vercel
 module.exports = app;
