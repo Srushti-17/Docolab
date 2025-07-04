@@ -44,7 +44,7 @@ const Register = () => {
       
       // Store token and user info
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', response.data.username);
+      localStorage.setItem('username', response.data.user.username);
       
       // Redirect to dashboard
       navigate('/dashboard');
