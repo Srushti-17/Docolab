@@ -42,7 +42,6 @@ const Register = () => {
         password: formData.password
       });
       
-      // Store token and user info
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('username', response.data.user.username);
       
